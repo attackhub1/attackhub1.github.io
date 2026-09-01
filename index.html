@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attack Hub Academy | เรียน Lua แบบง่ายๆ</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#07110d;
+    --bg2:#0b1913;
+    --card:#0f2119;
+    --card2:#12291f;
+    --text:#f2fff8;
+    --muted:#91aaa0;
+    --green:#39e58c;
+    --green2:#1bbd6c;
+    --border:rgba(57,229,140,.16);
+    --danger:#ff5d6c;
+    --yellow:#ffd75a;
+    --shadow:0 15px 45px rgba(0,0,0,.25);
+}
+
+body{
+    font-family:'Kanit',sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(57,229,140,.08),transparent 25%),
+        radial-gradient(circle at 90% 80%,rgba(27,189,108,.06),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button{
+    font-family:inherit;
+}
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+    background:var(--bg);
+}
+
+::-webkit-scrollbar-thumb{
+    background:#214c38;
+    border-radius:20px;
+}
+
+/* NAVBAR */
+
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    background:rgba(7,17,13,.82);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:700;
+}
+
+.logo-icon{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--green),var(--green2));
+    color:#031109;
+    box-shadow:0 8px 25px rgba(57,229,140,.2);
+}
+
+.logo span{
+    color:var(--green);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-btn{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    padding:8px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.nav-btn:hover{
+    border-color:var(--green);
+    transform:translateY(-2px);
+}
+
+/* LAYOUT */
+
+.app{
+    display:flex;
+    min-height:calc(100vh - 70px);
+}
+
+.sidebar{
+    width:280px;
+    position:fixed;
+    top:70px;
+    bottom:0;
+    left:0;
+    overflow-y:auto;
+    padding:25px 18px;
+    border-right:1px solid var(--border);
+    background:rgba(8,20,15,.75);
+}
+
+.sidebar-title{
+    color:var(--muted);
+    font-size:13px;
+    margin:0 10px 12px;
+}
+
+.lesson-item{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    text-align:left;
+    padding:12px 13px;
+    border-radius:11px;
+    margin-bottom:5px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    transition:.2s;
+}
+
+.lesson-item:hover{
+    background:rgba(57,229,140,.07);
+    color:var(--text);
+}
+
+.lesson-item.active{
+    background:rgba(57,229,140,.12);
+    color:var(--green);
+    border:1px solid rgba(57,229,140,.15);
+}
+
+.lesson-number{
+    min-width:27px;
+    height:27px;
+    display:grid;
+    place-items:center;
+    border-radius:8px;
+    background:#173327;
+    font-size:12px;
+}
+
+.lesson-item.active .lesson-number{
+    background:var(--green);
+    color:#031109;
+}
+
+.lesson-item.done .lesson-number{
+    background:#1a6c47;
+    color:white;
+}
+
+/* CONTENT */
+
+.content{
+    width:calc(100% - 280px);
+    margin-left:280px;
+    padding:45px 6%;
+    max-width:1250px;
+}
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:45px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    background:
+        linear-gradient(135deg,rgba(57,229,140,.10),transparent 50%),
+        var(--card);
+    box-shadow:var(--shadow);
+    margin-bottom:25px;
+}
+
+.hero::after{
+    content:"</>";
+    position:absolute;
+    right:45px;
+    bottom:-30px;
+    font-family:monospace;
+    font-size:150px;
+    font-weight:bold;
+    color:rgba(57,229,140,.035);
+}
+
+.badge{
+    display:inline-flex;
+    padding:7px 13px;
+    border-radius:20px;
+    color:var(--green);
+    background:rgba(57,229,140,.09);
+    border:1px solid var(--border);
+    font-size:13px;
+    margin-bottom:16px;
+}
+
+.hero h1{
+    font-size:42px;
+    line-height:1.2;
+    margin-bottom:12px;
+}
+
+.hero h1 span{
+    color:var(--green);
+}
+
+.hero p{
+    color:var(--muted);
+    max-width:650px;
+    line-height:1.8;
+}
+
+.progress-box{
+    margin-top:25px;
+    max-width:550px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.progress{
+    height:9px;
+    background:#173127;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--green2),var(--green));
+    border-radius:20px;
+    transition:.4s;
+}
+
+/* LESSON */
+
+.lesson-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:35px;
+    box-shadow:var(--shadow);
+}
+
+.lesson-head{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.lesson-icon{
+    width:55px;
+    height:55px;
+    border-radius:15px;
+    display:grid;
+    place-items:center;
+    background:rgba(57,229,140,.1);
+    font-size:25px;
+}
+
+.lesson-head small{
+    color:var(--green);
+}
+
+.lesson-head h2{
+    font-size:28px;
+}
+
+.explain{
+    color:#c5d8cf;
+    line-height:1.9;
+    margin-bottom:25px;
+}
+
+.tip{
+    display:flex;
+    gap:12px;
+    padding:17px;
+    background:rgba(255,215,90,.06);
+    border:1px solid rgba(255,215,90,.12);
+    border-radius:13px;
+    margin:20px 0;
+    color:#d9ddd2;
+}
+
+.tip strong{
+    color:var(--yellow);
+}
+
+/* CODE */
+
+.code-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:9px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.copy-btn{
+    border:1px solid var(--border);
+    background:#142a20;
+    color:var(--green);
+    padding:5px 10px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.code-box{
+    position:relative;
+    background:#06100c;
+    border:1px solid #19372a;
+    border-radius:13px;
+    overflow:hidden;
+    margin:10px 0 25px;
+}
+
+.code-box pre{
+    padding:20px;
+    overflow:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    line-height:1.7;
+    color:#d8eee3;
+}
+
+.run-btn{
+    margin:0 20px 20px;
+    padding:9px 15px;
+    border:0;
+    border-radius:9px;
+    background:var(--green);
+    color:#031109;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.run-btn:hover{
+    filter:brightness(1.1);
+}
+
+/* EXERCISE */
+
+.exercise{
+    margin-top:30px;
+    padding:22px;
+    border-radius:15px;
+    background:var(--card2);
+    border:1px solid var(--border);
+}
+
+.exercise h3{
+    margin-bottom:8px;
+}
+
+.question{
+    color:var(--muted);
+    margin-bottom:15px;
+}
+
+.answer-area{
+    width:100%;
+    min-height:100px;
+    resize:vertical;
+    padding:15px;
+    border-radius:11px;
+    outline:none;
+    border:1px solid #254536;
+    background:#08150f;
+    color:white;
+    font-family:'JetBrains Mono',monospace;
+}
+
+.check-btn{
+    margin-top:10px;
+    padding:10px 17px;
+    border:0;
+    border-radius:9px;
+    background:var(--green);
+    color:#031109;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:12px;
+    font-size:14px;
+}
+
+.result.success{
+    color:var(--green);
+}
+
+.result.error{
+    color:var(--danger);
+}
+
+/* BOTTOM */
+
+.lesson-footer{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-top:25px;
+}
+
+.footer-btn{
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    padding:12px 20px;
+    border-radius:11px;
+    cursor:pointer;
+}
+
+.footer-btn.primary{
+    background:var(--green);
+    color:#031109;
+    border-color:var(--green);
+    font-weight:600;
+}
+
+/* MOBILE */
+
+.menu-btn{
+    display:none;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:white;
+    padding:8px 11px;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.overlay{
+    display:none;
+}
+
+@media(max-width:800px){
+
+    .navbar{
+        padding:0 4%;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+        z-index:200;
+        background:#08140f;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .overlay.show{
+        display:block;
+        position:fixed;
+        inset:70px 0 0;
+        background:rgba(0,0,0,.55);
+        z-index:150;
+    }
+
+    .content{
+        width:100%;
+        margin-left:0;
+        padding:25px 4%;
+    }
+
+    .hero{
+        padding:28px;
+    }
+
+    .hero h1{
+        font-size:32px;
+    }
+
+    .lesson-card{
+        padding:23px;
+    }
+
+    .lesson-head h2{
+        font-size:23px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .nav-btn{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        <div class="logo-icon">&lt;/&gt;</div>
+        Lua<span>Kids</span>
+    </div>
+
+    <div class="nav-actions">
+        <button class="nav-btn" onclick="resetProgress()">↻ รีเซ็ตการเรียน</button>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+</nav>
+
+<div class="app">
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-title">📚 บทเรียนทั้งหมด</div>
+
+        <div id="lessonList"></div>
+
+    </aside>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <main class="content">
+
+        <section class="hero">
+
+            <div class="badge">🎮 Lua Programming สำหรับมือใหม่</div>
+
+            <h1>เรียน Lua<br><span>แบบง่ายๆ</span></h1>
+
+            <p>
+                คอร์ส Lua ที่ออกแบบให้มือใหม่เข้าใจได้ง่าย
+                เรียนทีละขั้น พร้อมตัวอย่างและแบบฝึกหัด
+                เหมาะสำหรับเด็ก ป.6 และคนที่ไม่เคยเขียนโค้ดมาก่อน
+            </p>
+
+            <div class="progress-box">
+
+                <div class="progress-top">
+                    <span>ความคืบหน้าของคุณ</span>
+                    <span id="progressText">0%</span>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="lesson-card" id="lessonContent"></section>
+
+    </main>
+
+</div>
+
+<script>
+
+const lessons = [
+
+{
+title:"รู้จัก Lua",
+icon:"👋",
+desc:`
+Lua คือภาษาโปรแกรมที่มีขนาดเล็กและเรียนรู้ได้ไม่ยาก
+เราสามารถใช้ Lua เพื่อสร้างระบบต่าง ๆ ในเกมได้
+
+ถ้าเปรียบเทียบง่าย ๆ
+
+<b>ภาษาโปรแกรม = ภาษาที่เราใช้คุยกับคอมพิวเตอร์</b>
+
+เราบอกคอมพิวเตอร์ว่า "ทำสิ่งนี้"
+แล้วคอมพิวเตอร์ก็ทำตามคำสั่งของเรา
+`,
+code:`print("สวัสดี Lua!")
+print("ฉันกำลังเรียนเขียนโปรแกรม")`,
+tip:"คำสั่ง print() ใช้สำหรับแสดงข้อความออกมา",
+question:"ลองเขียนคำสั่งที่แสดงคำว่า Hello Lua!",
+answer:'print("Hello Lua!")'
+},
+
+{
+title:"ตัวแปร (Variable)",
+icon:"📦",
+desc:`
+ตัวแปรเปรียบเหมือน "กล่องเก็บของ"
+
+เราใช้ตัวแปรเก็บข้อมูล เช่น ชื่อ อายุ คะแนน หรือเงิน
+
+คำว่า <b>local</b> หมายถึงเรากำลังสร้างตัวแปรขึ้นมา
+`,
+code:`local name = "Joe"
+local age = 16
+
+print(name)
+print(age)`,
+tip:"ตัวแปรช่วยให้เราเก็บข้อมูลและนำข้อมูลนั้นมาใช้ภายหลังได้",
+question:"สร้างตัวแปรชื่อ score และให้มีค่า 100",
+answer:'local score = 100'
+},
+
+{
+title:"ตัวเลขและการคำนวณ",
+icon:"🔢",
+desc:`
+Lua สามารถคำนวณตัวเลขได้เหมือนเครื่องคิดเลข
+
++ คือ บวก<br>
+- คือ ลบ<br>
+* คือ คูณ<br>
+/ คือ หาร
+`,
+code:`local money = 100
+local price = 25
+
+local result = money - price
+
+print(result)`,
+tip:"ถ้าเงินมี 100 บาท แล้วซื้อของ 25 บาท จะเหลือ 75 บาท",
+question:"สร้างตัวแปร a = 10 และ b = 5 แล้วหาผลบวก",
+answer:'local a = 10\nlocal b = 5\nprint(a + b)'
+},
+
+{
+title:"if / else",
+icon:"🧠",
+desc:`
+บางครั้งเราต้องการให้โปรแกรม "ตัดสินใจ"
+
+ตัวอย่างเช่น
+
+ถ้าคะแนนมากกว่าหรือเท่ากับ 50 → ผ่าน
+
+ถ้าน้อยกว่า 50 → ไม่ผ่าน
+
+เราสามารถใช้ <b>if</b> และ <b>else</b>
+`,
+code:`local score = 80
+
+if score >= 50 then
+    print("ผ่าน!")
+else
+    print("ไม่ผ่าน")
+end`,
+tip:"if = ถ้า และ else = ถ้าไม่ใช่",
+question:"เขียน if ที่ตรวจว่า score มากกว่าหรือเท่ากับ 10",
+answer:'if score >= 10 then'
+},
+
+{
+title:"Loop",
+icon:"🔁",
+desc:`
+Loop คือการสั่งให้โปรแกรมทำอะไรซ้ำ ๆ
+
+เช่น เราต้องการแสดงคำว่า "Hello"
+5 ครั้ง
+
+แทนที่จะเขียน print() 5 ครั้ง
+เราสามารถใช้ loop ได้
+`,
+code:`for i = 1, 5 do
+    print("Hello")
+end`,
+tip:"for loop ช่วยลดการเขียนโค้ดซ้ำ ๆ",
+question:"สร้าง for loop ที่ทำงาน 3 รอบ",
+answer:'for i = 1, 3 do'
+},
+
+{
+title:"Function",
+icon:"⚙️",
+desc:`
+Function คือการสร้าง "คำสั่งของเราเอง"
+
+สมมติว่าเราต้องการให้โปรแกรมพูดคำว่า Hello
+เราสามารถสร้างฟังก์ชันชื่อ SayHello ได้
+`,
+code:`local function SayHello()
+    print("สวัสดี!")
+end
+
+SayHello()`,
+tip:"เมื่อสร้าง Function แล้ว เราสามารถเรียกใช้มันกี่ครั้งก็ได้",
+question:"สร้าง Function ชื่อ Test",
+answer:'local function Test()'
+},
+
+{
+title:"Table",
+icon:"📋",
+desc:`
+Table ใช้สำหรับเก็บข้อมูลหลายอย่างเอาไว้ด้วยกัน
+
+เช่น รายชื่อผลไม้ 3 อย่าง
+
+ข้อมูลตัวแรกจะอยู่ที่ตำแหน่ง 1
+ข้อมูลตัวที่สองอยู่ที่ตำแหน่ง 2
+`,
+code:`local fruits = {
+    "Apple",
+    "Banana",
+    "Orange"
+}
+
+print(fruits[1])`,
+tip:"Lua เริ่มนับตำแหน่งใน Array จาก 1",
+question:"สร้าง table ชื่อ pets ที่มี Dog และ Cat",
+answer:'local pets = {\n    "Dog",\n    "Cat"\n}'
+},
+
+{
+title:"String",
+icon:"🔤",
+desc:`
+String คือข้อมูลประเภทข้อความ
+
+ข้อความต้องอยู่ภายในเครื่องหมาย " "
+
+เรายังสามารถนำข้อความมาต่อกันได้ด้วย ..
+`,
+code:`local name = "Joe"
+
+print("สวัสดี " .. name)`,
+tip:"เครื่องหมาย .. ใช้สำหรับต่อข้อความเข้าด้วยกัน",
+question:"สร้างตัวแปร name ที่มีค่าเป็น Alex",
+answer:'local name = "Alex"'
+},
+
+{
+title:"Boolean",
+icon:"✅",
+desc:`
+Boolean มีอยู่ 2 ค่า
+
+<b>true</b> = จริง
+
+<b>false</b> = เท็จ
+
+มักใช้ร่วมกับ if
+`,
+code:`local isAdmin = true
+
+if isAdmin then
+    print("คุณเป็น Admin")
+end`,
+tip:"Boolean เหมาะกับการเก็บข้อมูลแบบใช่/ไม่ใช่",
+question:"สร้างตัวแปรชื่อ isPlayer และให้เป็น true",
+answer:'local isPlayer = true'
+},
+
+{
+title:"Roblox Lua",
+icon:"🎮",
+desc:`
+ตอนนี้เราจะเริ่มเข้าสู่ Roblox Lua
+
+Roblox ใช้ภาษา <b>Luau</b>
+ซึ่งพัฒนามาจาก Lua
+
+เราสามารถใช้ Script เพื่อควบคุมสิ่งต่าง ๆ
+ภายในเกมของเราได้
+`,
+code:`print("Hello Roblox!")
+
+local part = workspace.Part
+
+part.Transparency = 0.5`,
+tip:"workspace คือพื้นที่หลักที่เก็บสิ่งต่าง ๆ ในเกม",
+question:"เขียนคำสั่ง print เพื่อแสดงคำว่า Roblox",
+answer:'print("Roblox")'
+},
+
+{
+title:"Part",
+icon:"🧱",
+desc:`
+Part คือวัตถุพื้นฐานใน Roblox
+
+เราสามารถเปลี่ยนคุณสมบัติของ Part ได้ เช่น
+
+Transparency = ความโปร่งใส
+
+CanCollide = เดินชนได้หรือไม่
+`,
+code:`local part = workspace.Part
+
+part.Transparency = 0.5
+part.CanCollide = false`,
+tip:"ลองเปลี่ยนค่า Transparency เป็น 1 แล้วดูว่าเกิดอะไรขึ้น",
+question:"ตั้งค่า CanCollide ของ Part ให้เป็น false",
+answer:'part.CanCollide = false'
+},
+
+{
+title:"Event",
+icon:"⚡",
+desc:`
+Event คือเหตุการณ์
+
+เช่น ผู้เล่นแตะ Part
+
+เราสามารถบอก Script ว่า
+
+"ถ้ามีคนแตะ Part ให้ทำสิ่งนี้"
+`,
+code:`workspace.Part.Touched:Connect(function(hit)
+    print("มีคนแตะ Part!")
+end)`,
+tip:"Touched จะทำงานเมื่อมีบางสิ่งสัมผัสกับ Part",
+question:"เมื่อ Part ถูกแตะ ให้แสดงคำว่า Hit!",
+answer:'print("Hit!")'
+},
+
+{
+title:"Player",
+icon:"👤",
+desc:`
+ใน Roblox เราสามารถเข้าถึงข้อมูลของผู้เล่นได้
+
+ตัวอย่างเช่นชื่อของผู้เล่น
+`,
+code:`local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+
+print(player.Name)`,
+tip:"LocalPlayer หมายถึงผู้เล่นที่กำลังเล่นอยู่บนเครื่องนั้น",
+question:"แสดงชื่อผู้เล่นด้วย print",
+answer:'print(player.Name)'
+},
+
+{
+title:"Coin System",
+icon:"💰",
+desc:`
+มาลองทำระบบ Coin ง่าย ๆ
+
+เราจะสร้างตัวแปร coins
+แล้วเพิ่มจำนวน Coin เข้าไป
+`,
+code:`local coins = 0
+
+coins = coins + 10
+coins = coins + 5
+
+print("Coins:", coins)`,
+tip:"coins = coins + 10 หมายถึงเพิ่ม Coin อีก 10",
+question:"สร้าง coins = 0 แล้วเพิ่มอีก 100",
+answer:'local coins = 0\ncoins = coins + 100'
+},
+
+{
+title:"Mini Project",
+icon:"🏆",
+desc:`
+ยินดีด้วย! 🎉
+
+มาถึงโปรเจกต์เล็ก ๆ ของเราแล้ว
+
+ลองนำความรู้ทั้งหมดมารวมกัน
+
+โปรเจกต์นี้จะมี
+
+• Coin
+• คะแนน
+• Function
+• if
+• print
+
+การเขียนโปรแกรมเก่งขึ้นไม่ได้เกิดจากการจำ
+แต่เกิดจากการ "ลองเขียน" บ่อย ๆ
+`,
+code:`local coins = 0
+
+local function AddCoin()
+    coins = coins + 10
+    print("Coin:", coins)
+end
+
+AddCoin()
+AddCoin()
+
+if coins >= 20 then
+    print("เก่งมาก! ได้ 20 Coin แล้ว")
+end`,
+tip:"อย่ากลัวโค้ดผิด เพราะ Error คือสิ่งที่ช่วยให้เราเรียนรู้",
+question:"ลองสร้างตัวแปร score = 100",
+answer:'local score = 100'
+}
+
+];
+
+let currentLesson = 0;
+let completed = JSON.parse(localStorage.getItem("luaCompleted") || "[]");
+
+function init(){
+
+    createLessonList();
+    showLesson(0);
+    updateProgress();
+
+}
+
+function createLessonList(){
+
+    const list = document.getElementById("lessonList");
+
+    list.innerHTML = "";
+
+    lessons.forEach((lesson,index)=>{
+
+        const btn = document.createElement("button");
+
+        btn.className =
+            "lesson-item " +
+            (index === currentLesson ? "active " : "") +
+            (completed.includes(index) ? "done" : "");
+
+        btn.innerHTML = `
+            <span class="lesson-number">
+                ${completed.includes(index) ? "✓" : index + 1}
+            </span>
+            <span>${lesson.title}</span>
+        `;
+
+        btn.onclick = ()=>{
+
+            showLesson(index);
+
+            if(window.innerWidth <= 800){
+                toggleMenu();
+            }
+
+        };
+
+        list.appendChild(btn);
+
+    });
+
+}
+
+function showLesson(index){
+
+    currentLesson = index;
+
+    const lesson = lessons[index];
+
+    const content = document.getElementById("lessonContent");
+
+    content.innerHTML = `
+
+        <div class="lesson-head">
+
+            <div class="lesson-icon">
+                ${lesson.icon}
+            </div>
+
+            <div>
+                <small>บทที่ ${index + 1} / ${lessons.length}</small>
+                <h2>${lesson.title}</h2>
+            </div>
+
+        </div>
+
+        <div class="explain">
+            ${lesson.desc}
+        </div>
+
+        <div class="code-title">
+            <span>💻 ตัวอย่างโค้ด</span>
+            <button class="copy-btn" onclick="copyCode()">คัดลอก</button>
+        </div>
+
+        <div class="code-box">
+
+            <pre id="code">${escapeHtml(lesson.code)}</pre>
+
+            <button class="run-btn" onclick="runCode()">
+                ▶ ทดลองรัน
+            </button>
+
+        </div>
+
+        <div class="tip">
+            <span>💡</span>
+            <div>
+                <strong>จำง่าย ๆ:</strong><br>
+                ${lesson.tip}
+            </div>
+        </div>
+
+        <div class="exercise">
+
+            <h3>📝 แบบฝึกหัด</h3>
+
+            <div class="question">
+                ${lesson.question}
+            </div>
+
+            <textarea
+                class="answer-area"
+                id="answer"
+                placeholder="พิมพ์โค้ดของคุณตรงนี้..."
+            ></textarea>
+
+            <br>
+
+            <button class="check-btn" onclick="checkAnswer()">
+                ✓ ตรวจคำตอบ
+            </button>
+
+            <div class="result" id="result"></div>
+
+        </div>
+
+        <div class="lesson-footer">
+
+            <button
+                class="footer-btn"
+                onclick="previousLesson()"
+                ${index === 0 ? "disabled" : ""}
+            >
+                ← บทก่อนหน้า
+            </button>
+
+            <button
+                class="footer-btn primary"
+                onclick="completeLesson()"
+            >
+                ${completed.includes(index) ? "✓ เรียนจบแล้ว" : "เรียนจบบทนี้ ✓"}
+            </button>
+
+            <button
+                class="footer-btn"
+                onclick="nextLesson()"
+                ${index === lessons.length - 1 ? "disabled" : ""}
+            >
+                บทถัดไป →
+            </button>
+
+        </div>
+
+    `;
+
+    createLessonList();
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+function escapeHtml(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+function copyCode(){
+
+    navigator.clipboard.writeText(
+        lessons[currentLesson].code
+    );
+
+    const btn = document.querySelector(".copy-btn");
+
+    btn.textContent = "✓ คัดลอกแล้ว";
+
+    setTimeout(()=>{
+        btn.textContent = "คัดลอก";
+    },1500);
+
+}
+
+function runCode(){
+
+    alert(
+        "▶ ทดลองรัน\n\n" +
+        "โค้ดถูกส่งให้ตัวจำลองทำงานแล้ว!\n\n" +
+        "หมายเหตุ: เว็บไซต์นี้เป็นตัวจำลองสำหรับฝึกเขียนโค้ด " +
+        "ไม่ได้รัน Luau ของ Roblox จริง"
+    );
+
+}
+
+function checkAnswer(){
+
+    const input = document
+        .getElementById("answer")
+        .value
+        .trim()
+        .replace(/\s+/g," ");
+
+    const correct = lessons[currentLesson]
+        .answer
+        .trim()
+        .replace(/\s+/g," ");
+
+    const result = document.getElementById("result");
+
+    if(input === correct){
+
+        result.className = "result success";
+
+        result.innerHTML =
+            "🎉 ถูกต้อง! เก่งมาก! ไปบทต่อไปได้เลย";
+
+    }else{
+
+        result.className = "result error";
+
+        result.innerHTML =
+            "❌ ยังไม่ถูก ลองดูตัวอย่างด้านบนแล้วลองใหม่อีกครั้ง";
+
+    }
+
+}
+
+function completeLesson(){
+
+    if(!completed.includes(currentLesson)){
+
+        completed.push(currentLesson);
+
+        localStorage.setItem(
+            "luaCompleted",
+            JSON.stringify(completed)
+        );
+
+    }
+
+    updateProgress();
+    createLessonList();
+
+    if(currentLesson < lessons.length - 1){
+
+        showLesson(currentLesson + 1);
+
+    }else{
+
+        alert("🎉 ยินดีด้วย! คุณเรียนจบคอร์ส Attack Hub แล้ว!");
+
+    }
+
+}
+
+function previousLesson(){
+
+    if(currentLesson > 0){
+
+        showLesson(currentLesson - 1);
+
+    }
+
+}
+
+function nextLesson(){
+
+    if(currentLesson < lessons.length - 1){
+
+        showLesson(currentLesson + 1);
+
+    }
+
+}
+
+function updateProgress(){
+
+    const percent =
+        Math.round(
+            (completed.length / lessons.length) * 100
+        );
+
+    document.getElementById("progressBar").style.width =
+        percent + "%";
+
+    document.getElementById("progressText").textContent =
+        percent + "%";
+
+}
+
+function resetProgress(){
+
+    if(confirm("ต้องการรีเซ็ตความคืบหน้าทั้งหมดหรือไม่?")){
+
+        completed = [];
+
+        localStorage.removeItem("luaCompleted");
+
+        updateProgress();
+        createLessonList();
+        showLesson(0);
+
+    }
+
+}
+
+function toggleMenu(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+    document
+        .getElementById("overlay")
+        .classList.toggle("show");
+
+}
+
+init();
+
+</script>
+<script>
+// ปิดคลิกขวา
+document.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    alert("ฮั่นแน่ 👀 จะคลิกขวาทำไม");
+});
+
+// ปิดปุ่มลัด DevTools
+document.addEventListener("keydown", e => {
+
+    if (e.key === "F12") {
+        e.preventDefault();
+        alert("ฮั่นแน่ 👀 จะดูโค้ดหรอ");
+    }
+
+    if (
+        e.ctrlKey &&
+        e.shiftKey &&
+        (
+            e.key === "I" ||
+            e.key === "J" ||
+            e.key === "C"
+        )
+    ) {
+        e.preventDefault();
+        alert("แหม่ 😏 จะเปิด DevTools ใช่มั้ย");
+    }
+
+    if (e.ctrlKey && e.key === "U") {
+        e.preventDefault();
+        alert("ดู Source ไม่ได้น้า 🤣");
+    }
+});
+
+// ข้อความใน Console
+console.log(
+    "%cฮั่นแน่ 👀",
+    "font-size:50px;font-weight:bold;color:red;"
+);
+
+console.log(
+    "%cจะดูโค้ดก็ได้ แต่อย่าก๊อปเลยนะ 😆",
+    "font-size:20px;"
+);
+
+// ตรวจจับ DevTools
+let warned = false;
+
+setInterval(() => {
+
+    const devtools =
+        window.outerWidth - window.innerWidth > 160 ||
+        window.outerHeight - window.innerHeight > 160;
+
+    if (devtools && !warned) {
+
+        warned = true;
+
+        alert("🚨 ฮั่นแน่! เปิด F12 ทำไม 😏");
+
+        document.body.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div id="runin-warning"
+            style="
+            position:fixed;
+            top:20px;
+            right:20px;
+            z-index:999999;
+            background:#111;
+            color:#00ff88;
+            padding:15px 25px;
+            border-radius:10px;
+            font-size:18px;
+            box-shadow:0 0 15px #00ff88;">
+            👀 ฮั่นแน่ จะส่องอะไรอะ
+            </div>
+            `
+        );
+
+    }
+
+}, 1000);
+</script>
+</body>
+</html>
