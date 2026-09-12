@@ -1,1356 +1,1104 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Attack Hub Academy | เรียน Lua แบบง่ายๆ</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-:root{
-    --bg:#07110d;
-    --bg2:#0b1913;
-    --card:#0f2119;
-    --card2:#12291f;
-    --text:#f2fff8;
-    --muted:#91aaa0;
-    --green:#39e58c;
-    --green2:#1bbd6c;
-    --border:rgba(57,229,140,.16);
-    --danger:#ff5d6c;
-    --yellow:#ffd75a;
-    --shadow:0 15px 45px rgba(0,0,0,.25);
-}
-
-body{
-    font-family:'Kanit',sans-serif;
-    background:
-        radial-gradient(circle at 10% 10%,rgba(57,229,140,.08),transparent 25%),
-        radial-gradient(circle at 90% 80%,rgba(27,189,108,.06),transparent 25%),
-        var(--bg);
-    color:var(--text);
-    min-height:100vh;
-}
-
-button{
-    font-family:inherit;
-}
-
-::-webkit-scrollbar{
-    width:8px;
-}
-
-::-webkit-scrollbar-track{
-    background:var(--bg);
-}
-
-::-webkit-scrollbar-thumb{
-    background:#214c38;
-    border-radius:20px;
-}
-
-/* NAVBAR */
-
-.navbar{
-    position:sticky;
-    top:0;
-    z-index:100;
-    height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 6%;
-    background:rgba(7,17,13,.82);
-    backdrop-filter:blur(18px);
-    border-bottom:1px solid var(--border);
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-size:22px;
-    font-weight:700;
-}
-
-.logo-icon{
-    width:38px;
-    height:38px;
-    border-radius:11px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(135deg,var(--green),var(--green2));
-    color:#031109;
-    box-shadow:0 8px 25px rgba(57,229,140,.2);
-}
-
-.logo span{
-    color:var(--green);
-}
-
-.nav-actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.nav-btn{
-    border:1px solid var(--border);
-    background:var(--card);
-    color:var(--text);
-    padding:8px 14px;
-    border-radius:10px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.nav-btn:hover{
-    border-color:var(--green);
-    transform:translateY(-2px);
-}
-
-/* LAYOUT */
-
-.app{
-    display:flex;
-    min-height:calc(100vh - 70px);
-}
-
-.sidebar{
-    width:280px;
-    position:fixed;
-    top:70px;
-    bottom:0;
-    left:0;
-    overflow-y:auto;
-    padding:25px 18px;
-    border-right:1px solid var(--border);
-    background:rgba(8,20,15,.75);
-}
-
-.sidebar-title{
-    color:var(--muted);
-    font-size:13px;
-    margin:0 10px 12px;
-}
-
-.lesson-item{
-    width:100%;
-    border:0;
-    background:transparent;
-    color:var(--muted);
-    text-align:left;
-    padding:12px 13px;
-    border-radius:11px;
-    margin-bottom:5px;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    gap:11px;
-    transition:.2s;
-}
-
-.lesson-item:hover{
-    background:rgba(57,229,140,.07);
-    color:var(--text);
-}
-
-.lesson-item.active{
-    background:rgba(57,229,140,.12);
-    color:var(--green);
-    border:1px solid rgba(57,229,140,.15);
-}
-
-.lesson-number{
-    min-width:27px;
-    height:27px;
-    display:grid;
-    place-items:center;
-    border-radius:8px;
-    background:#173327;
-    font-size:12px;
-}
-
-.lesson-item.active .lesson-number{
-    background:var(--green);
-    color:#031109;
-}
-
-.lesson-item.done .lesson-number{
-    background:#1a6c47;
-    color:white;
-}
-
-/* CONTENT */
-
-.content{
-    width:calc(100% - 280px);
-    margin-left:280px;
-    padding:45px 6%;
-    max-width:1250px;
-}
-
-.hero{
-    position:relative;
-    overflow:hidden;
-    padding:45px;
-    border:1px solid var(--border);
-    border-radius:25px;
-    background:
-        linear-gradient(135deg,rgba(57,229,140,.10),transparent 50%),
-        var(--card);
-    box-shadow:var(--shadow);
-    margin-bottom:25px;
-}
-
-.hero::after{
-    content:"</>";
-    position:absolute;
-    right:45px;
-    bottom:-30px;
-    font-family:monospace;
-    font-size:150px;
-    font-weight:bold;
-    color:rgba(57,229,140,.035);
-}
-
-.badge{
-    display:inline-flex;
-    padding:7px 13px;
-    border-radius:20px;
-    color:var(--green);
-    background:rgba(57,229,140,.09);
-    border:1px solid var(--border);
-    font-size:13px;
-    margin-bottom:16px;
-}
-
-.hero h1{
-    font-size:42px;
-    line-height:1.2;
-    margin-bottom:12px;
-}
-
-.hero h1 span{
-    color:var(--green);
-}
-
-.hero p{
-    color:var(--muted);
-    max-width:650px;
-    line-height:1.8;
-}
-
-.progress-box{
-    margin-top:25px;
-    max-width:550px;
-}
-
-.progress-top{
-    display:flex;
-    justify-content:space-between;
-    color:var(--muted);
-    font-size:13px;
-    margin-bottom:8px;
-}
-
-.progress{
-    height:9px;
-    background:#173127;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.progress-bar{
-    height:100%;
-    width:0%;
-    background:linear-gradient(90deg,var(--green2),var(--green));
-    border-radius:20px;
-    transition:.4s;
-}
-
-/* LESSON */
-
-.lesson-card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:35px;
-    box-shadow:var(--shadow);
-}
-
-.lesson-head{
-    display:flex;
-    gap:15px;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.lesson-icon{
-    width:55px;
-    height:55px;
-    border-radius:15px;
-    display:grid;
-    place-items:center;
-    background:rgba(57,229,140,.1);
-    font-size:25px;
-}
-
-.lesson-head small{
-    color:var(--green);
-}
-
-.lesson-head h2{
-    font-size:28px;
-}
-
-.explain{
-    color:#c5d8cf;
-    line-height:1.9;
-    margin-bottom:25px;
-}
-
-.tip{
-    display:flex;
-    gap:12px;
-    padding:17px;
-    background:rgba(255,215,90,.06);
-    border:1px solid rgba(255,215,90,.12);
-    border-radius:13px;
-    margin:20px 0;
-    color:#d9ddd2;
-}
-
-.tip strong{
-    color:var(--yellow);
-}
-
-/* CODE */
-
-.code-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:9px;
-    color:var(--muted);
-    font-size:13px;
-}
-
-.copy-btn{
-    border:1px solid var(--border);
-    background:#142a20;
-    color:var(--green);
-    padding:5px 10px;
-    border-radius:7px;
-    cursor:pointer;
-}
-
-.code-box{
-    position:relative;
-    background:#06100c;
-    border:1px solid #19372a;
-    border-radius:13px;
-    overflow:hidden;
-    margin:10px 0 25px;
-}
-
-.code-box pre{
-    padding:20px;
-    overflow:auto;
-    font-family:'JetBrains Mono',monospace;
-    font-size:14px;
-    line-height:1.7;
-    color:#d8eee3;
-}
-
-.run-btn{
-    margin:0 20px 20px;
-    padding:9px 15px;
-    border:0;
-    border-radius:9px;
-    background:var(--green);
-    color:#031109;
-    font-weight:600;
-    cursor:pointer;
-}
-
-.run-btn:hover{
-    filter:brightness(1.1);
-}
-
-/* EXERCISE */
-
-.exercise{
-    margin-top:30px;
-    padding:22px;
-    border-radius:15px;
-    background:var(--card2);
-    border:1px solid var(--border);
-}
-
-.exercise h3{
-    margin-bottom:8px;
-}
-
-.question{
-    color:var(--muted);
-    margin-bottom:15px;
-}
-
-.answer-area{
-    width:100%;
-    min-height:100px;
-    resize:vertical;
-    padding:15px;
-    border-radius:11px;
-    outline:none;
-    border:1px solid #254536;
-    background:#08150f;
-    color:white;
-    font-family:'JetBrains Mono',monospace;
-}
-
-.check-btn{
-    margin-top:10px;
-    padding:10px 17px;
-    border:0;
-    border-radius:9px;
-    background:var(--green);
-    color:#031109;
-    font-weight:600;
-    cursor:pointer;
-}
-
-.result{
-    margin-top:12px;
-    font-size:14px;
-}
-
-.result.success{
-    color:var(--green);
-}
-
-.result.error{
-    color:var(--danger);
-}
-
-/* BOTTOM */
-
-.lesson-footer{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    margin-top:25px;
-}
-
-.footer-btn{
-    border:1px solid var(--border);
-    background:var(--card);
-    color:var(--text);
-    padding:12px 20px;
-    border-radius:11px;
-    cursor:pointer;
-}
-
-.footer-btn.primary{
-    background:var(--green);
-    color:#031109;
-    border-color:var(--green);
-    font-weight:600;
-}
-
-/* MOBILE */
-
-.menu-btn{
-    display:none;
-    border:1px solid var(--border);
-    background:var(--card);
-    color:white;
-    padding:8px 11px;
-    border-radius:9px;
-    cursor:pointer;
-}
-
-.overlay{
-    display:none;
-}
-
-@media(max-width:800px){
-
-    .navbar{
-        padding:0 4%;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RUNIN Free For You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-darkest:   #1a1a1f;
+      --bg-dark:      #222228;
+      --bg-panel:     #2a2a32;
+      --bg-card:      #32323c;
+      --bg-hover:     #3a3a46;
+      --border:       #3d3d4a;
+      --border-light: #52525f;
+      --accent:       #8b5cf6;
+      --accent-hover: #7c3aed;
+      --accent-glow:  rgba(139,92,246,.35);
+      --accent2:      #06b6d4;
+      --accent2-glow: rgba(6,182,212,.3);
+      --success:      #22c55e;
+      --error:        #ef4444;
+      --warning:      #f59e0b;
+      --text-primary: #e8e8f0;
+      --text-secondary:#a0a0b4;
+      --text-muted:   #6b6b80;
+      --text-dim:     #4a4a58;
+      --font: 'Inter', sans-serif;
+      --radius-sm: 4px;
+      --radius:    8px;
+      --radius-lg: 12px;
+      --shadow:    0 4px 24px rgba(0,0,0,.5);
+      --transition: .2s ease;
     }
 
-    .menu-btn{
-        display:block;
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-darkest);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
     }
 
-    .sidebar{
-        transform:translateX(-100%);
-        transition:.3s;
-        z-index:200;
-        background:#08140f;
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-darkest); }
+    ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ── Menu Bar ── */
+    .menu-bar {
+      height: 26px;
+      background: #111115;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 18px;
+      border-bottom: 1px solid #000;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .menu-bar-logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-right: 8px;
+    }
+    .menu-bar-item {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      cursor: default;
+      transition: var(--transition);
+    }
+    .menu-bar-item:hover { background: var(--bg-card); color: var(--text-primary); }
+
+    /* ── Title Bar ── */
+    .title-bar {
+      background: var(--bg-dark);
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .title-bar-left { display: flex; align-items: center; gap: 14px; }
+    .title-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 16px var(--accent-glow);
+      flex-shrink: 0;
+    }
+    .title-text h1 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .title-text p { font-size: 10px; color: var(--text-muted); letter-spacing: .5px; }
+    .badge {
+      font-size: 10px; font-weight: 600;
+      padding: 3px 8px; border-radius: 99px;
+      background: var(--accent); color: #fff; letter-spacing: .5px;
     }
 
-    .sidebar.open{
-        transform:translateX(0);
+    /* ── Layout ── */
+    .app-wrapper {
+      display: grid;
+      grid-template-columns: 220px 1fr 220px;
+      min-height: calc(100vh - 72px);
     }
 
-    .overlay.show{
-        display:block;
-        position:fixed;
-        inset:70px 0 0;
-        background:rgba(0,0,0,.55);
-        z-index:150;
+    .panel { background: var(--bg-panel); border-right: 1px solid var(--border); }
+    .panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+    .panel-header {
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 1px; color: var(--text-secondary);
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 7px;
+      user-select: none;
+    }
+    .panel-header::before {
+      content: ''; width: 3px; height: 12px;
+      background: var(--accent); border-radius: 99px; display: inline-block;
+    }
+    .panel-body { padding: 12px; }
+
+    /* ── Left Panel ── */
+    .site-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .site-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 8px 10px; border-radius: var(--radius);
+      cursor: default; transition: var(--transition);
+      font-size: 12px; color: var(--text-secondary);
+      border: 1px solid transparent;
+    }
+    .site-item:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border); }
+    .site-icon {
+      width: 24px; height: 24px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .site-icon.yt  { background: #ff0000; }
+    .site-icon.tt  { background: #010101; border: 1px solid #333; }
+    .site-icon.ig  { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+    .site-icon.tw  { background: #1d9bf0; }
+    .site-icon.fb  { background: #1877f2; }
+    .site-icon.sc  { background: #ff6600; }
+    .site-icon.vi  { background: #1ab7ea; }
+    .site-icon.ok  { background: var(--accent); }
+
+    .section-title {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-muted); margin: 14px 0 6px; padding: 0 4px;
     }
 
-    .content{
-        width:100%;
-        margin-left:0;
-        padding:25px 4%;
+    /* ── Center Panel ── */
+    .center-panel { background: var(--bg-darkest); padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+
+    .input-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .input-label {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-secondary); letter-spacing: .8px;
+      text-transform: uppercase; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .url-row { display: flex; gap: 10px; }
+    .url-input {
+      flex: 1;
+      background: var(--bg-darkest);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 13px; color: var(--text-primary);
+      transition: var(--transition); outline: none;
+    }
+    .url-input::placeholder { color: var(--text-dim); }
+    .url-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+    .btn {
+      padding: 10px 18px; border: none; border-radius: var(--radius);
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      color: #fff; box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, var(--accent-hover), #6d28d9); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      background: var(--bg-card); color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .btn-success {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff; box-shadow: 0 4px 14px rgba(34,197,94,.3);
+    }
+    .btn-success:hover { background: linear-gradient(135deg, #15803d, #166534); transform: translateY(-1px); }
+    .btn-cyan {
+      background: linear-gradient(135deg, var(--accent2), #0891b2);
+      color: #fff; box-shadow: 0 4px 14px var(--accent2-glow);
+    }
+    .btn-cyan:hover { background: linear-gradient(135deg, #0891b2, #0e7490); transform: translateY(-1px); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+
+    .options-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .option-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 120px; }
+    .option-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .8px; }
+    .select-styled {
+      background: var(--bg-darkest);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      font-family: var(--font); font-size: 12px; color: var(--text-primary);
+      cursor: pointer; outline: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b6b80'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 18px;
+      padding-right: 32px;
+      transition: var(--transition);
+    }
+    .select-styled:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+    .format-tabs { display: flex; gap: 6px; }
+    .format-tab {
+      flex: 1; padding: 9px;
+      border: 2px solid var(--border); border-radius: var(--radius);
+      background: var(--bg-darkest);
+      color: var(--text-muted); font-family: var(--font);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; text-align: center; transition: var(--transition); user-select: none;
+    }
+    .format-tab:hover { border-color: var(--border-light); color: var(--text-secondary); }
+    .format-tab.active-mp4 { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
+    .format-tab.active-mp3 { border-color: var(--accent2); background: var(--accent2-glow); color: var(--accent2); }
+
+    .progress-wrap { margin-top: 14px; display: none; }
+    .progress-wrap.show { display: block; }
+    .progress-bar-track { height: 6px; background: var(--bg-darkest); border-radius: 99px; overflow: hidden; }
+    .progress-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 99px; transition: width .4s ease; position: relative;
+    }
+    .progress-bar-fill::after {
+      content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+      width: 60px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.3));
+      animation: shimmer 1.2s infinite;
+    }
+    @keyframes shimmer { 0%{opacity:0} 50%{opacity:1} 100%{opacity:0} }
+    .progress-text {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--text-muted); margin-top: 6px;
     }
 
-    .hero{
-        padding:28px;
+    .status-msg {
+      margin-top: 10px; padding: 10px 14px; border-radius: var(--radius);
+      font-size: 12px; font-weight: 500;
+      display: none; align-items: center; gap: 8px;
+      animation: fadeIn .3s ease;
     }
+    .status-msg.show { display: flex; }
+    .status-msg.info    { background: rgba(139,92,246,.15); border: 1px solid rgba(139,92,246,.4); color: #c4b5fd; }
+    .status-msg.success { background: rgba(34,197,94,.12);  border: 1px solid rgba(34,197,94,.35); color: #86efac; }
+    .status-msg.error   { background: rgba(239,68,68,.12);  border: 1px solid rgba(239,68,68,.35); color: #fca5a5; }
+    .status-msg.warning { background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.35); color: #fcd34d; }
 
-    .hero h1{
-        font-size:32px;
+    .result-card {
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px;
+      display: none; animation: fadeIn .3s ease;
     }
+    .result-card.show { display: block; }
+    .result-thumb-row { display: flex; gap: 14px; align-items: flex-start; }
+    .result-thumb {
+      width: 140px; height: 80px; object-fit: cover;
+      border-radius: var(--radius); background: var(--bg-dark);
+      flex-shrink: 0; border: 1px solid var(--border);
+    }
+    .result-thumb-placeholder {
+      width: 140px; height: 80px; border-radius: var(--radius);
+      background: var(--bg-dark); flex-shrink: 0;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 26px;
+    }
+    .result-meta { flex: 1; min-width: 0; }
+    .result-title {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .result-info {
+      font-size: 11px; color: var(--text-muted); margin-bottom: 4px;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .result-info span { background: var(--bg-card); padding: 2px 7px; border-radius: 99px; }
+    .result-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 
-    .lesson-card{
-        padding:23px;
+    /* ── File Renamer ── */
+    .rename-card {
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px;
     }
+    .rename-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .rename-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent2), #0891b2);
+      border-radius: var(--radius); display: flex; align-items: center; justify-content: center;
+      font-size: 16px; box-shadow: 0 0 12px var(--accent2-glow);
+    }
+    .rename-title { font-size: 14px; font-weight: 700; }
+    .rename-subtitle { font-size: 11px; color: var(--text-muted); }
 
-    .lesson-head h2{
-        font-size:23px;
+    .rename-upload-zone {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 22px; text-align: center; cursor: pointer;
+      transition: var(--transition); position: relative;
     }
+    .rename-upload-zone:hover, .rename-upload-zone.drag-over {
+      border-color: var(--accent2); background: rgba(6,182,212,.06);
+    }
+    .rename-upload-zone input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-text { font-size: 12px; color: var(--text-secondary); }
+    .upload-subtext { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
 
-    .logo{
-        font-size:18px;
+    .rename-fields {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 10px; margin-top: 14px; align-items: end;
     }
+    .arrow-box {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 18px; padding-bottom: 2px;
+    }
+    .field-wrap { display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .7px; }
+    .text-input {
+      background: var(--bg-darkest); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 9px 12px;
+      font-family: var(--font); font-size: 12px; color: var(--text-primary);
+      outline: none; transition: var(--transition); width: 100%;
+    }
+    .text-input:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px var(--accent2-glow); }
+    .rename-actions { display: flex; gap: 8px; margin-top: 12px; }
 
-    .nav-btn{
-        display:none;
+    .file-info-row {
+      display: none; align-items: center; gap: 10px;
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 10px 14px; margin-top: 12px;
     }
-}
-</style>
+    .file-info-row.show { display: flex; }
+    .file-icon-big { font-size: 22px; }
+    .file-details { flex: 1; min-width: 0; }
+    .file-name-text {
+      font-size: 12px; font-weight: 500; color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .file-size-text { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Right Panel ── */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .stat-box {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 10px; text-align: center;
+    }
+    .stat-num {
+      font-size: 20px; font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .stat-lbl { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; margin-top: 2px; }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+    .history-item {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 10px; font-size: 11px;
+    }
+    .history-item-title {
+      color: var(--text-primary); font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;
+    }
+    .history-item-meta { color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
+    .hist-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 99px; }
+    .hist-badge.mp4 { background: rgba(139,92,246,.2); color: var(--accent); }
+    .hist-badge.mp3 { background: rgba(6,182,212,.2); color: var(--accent2); }
+
+    /* ── Status Bar ── */
+    .status-bar {
+      background: var(--accent); height: 22px;
+      display: flex; align-items: center; padding: 0 16px; gap: 20px;
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,.9);
+      letter-spacing: .4px; position: sticky; bottom: 0;
+    }
+    .status-bar-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,.7); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .status-bar span { margin-left: auto; opacity: .7; }
+
+    /* ── Misc ── */
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .spin { display:inline-block; animation:spin .8s linear infinite; }
+
+    .tip-box {
+      background: var(--bg-dark); border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 10px 12px;
+      font-size: 11px; color: var(--text-muted); line-height: 1.6;
+    }
+    .tip-box strong { color: var(--text-secondary); }
+    .sep { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+    .divider-label {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 10px; font-weight: 600; color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 1px; margin: 4px 0;
+    }
+    .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .app-wrapper { grid-template-columns: 1fr; }
+      .left-panel, .right-panel { display: none; }
+      .center-panel { padding: 14px; }
+    }
+    @media (max-width: 600px) {
+      .url-row { flex-direction: column; }
+      .options-row { flex-direction: column; }
+      .rename-fields { grid-template-columns: 1fr; }
+      .arrow-box { transform: rotate(90deg); }
+      .result-thumb-row { flex-direction: column; }
+      .result-thumb, .result-thumb-placeholder { width: 100%; height: 140px; }
+    }
+    @media (max-width: 360px) {
+      .format-tabs { flex-direction: column; }
+    }
+  </style>
 </head>
-
 <body>
 
-<nav class="navbar">
+<!-- ── Menu Bar ── -->
+<div class="menu-bar">
+  <span class="menu-bar-logo">RUNIN</span>
+  <span class="menu-bar-item">File</span>
+  <span class="menu-bar-item">Edit</span>
+  <span class="menu-bar-item">Tools</span>
+  <span class="menu-bar-item">Help</span>
+</div>
 
-    <div class="logo">
-        <div class="logo-icon">&lt;/&gt;</div>
-        Lua<span>Kids</span>
+<!-- ── Title Bar ── -->
+<div class="title-bar">
+  <div class="title-bar-left">
+    <div class="title-icon">🎬</div>
+    <div class="title-text">
+      <h1>RUNIN Free For You</h1>
+      <p>VIDEO &amp; AUDIO DOWNLOADER · FILE CONVERTER</p>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span class="badge">FREE</span>
+    <span style="font-size:11px;color:var(--text-muted);" id="clock">--:--:--</span>
+  </div>
+</div>
+
+<!-- ── App Body ── -->
+<div class="app-wrapper">
+
+  <!-- LEFT PANEL -->
+  <div class="panel left-panel">
+    <div class="panel-header">🌐 Supported Sites</div>
+    <div class="panel-body">
+      <div class="section-title">Video Platforms</div>
+      <ul class="site-list">
+        <li class="site-item"><div class="site-icon yt">▶</div>YouTube</li>
+        <li class="site-item"><div class="site-icon tt">♪</div>TikTok</li>
+        <li class="site-item"><div class="site-icon ig">📷</div>Instagram</li>
+        <li class="site-item"><div class="site-icon tw">🐦</div>Twitter / X</li>
+        <li class="site-item"><div class="site-icon fb">f</div>Facebook</li>
+        <li class="site-item"><div class="site-icon sc">☁</div>SoundCloud</li>
+        <li class="site-item"><div class="site-icon vi">▶</div>Vimeo</li>
+        <li class="site-item"><div class="site-icon ok" style="font-size:10px;font-weight:700;">+</div>& More…</li>
+      </ul>
+      <hr class="sep" />
+      <div class="tip-box">
+        <strong>💡 Tips:</strong><br/>
+        วางลิงก์วิดีโอแล้วเลือกรูปแบบที่ต้องการ<br/>
+        รองรับ YouTube, TikTok, Instagram และอื่น ๆ
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER PANEL -->
+  <div class="center-panel">
+
+    <!-- Downloader Card -->
+    <div class="input-card">
+      <div class="input-label">🔗 วางลิงก์วิดีโอ / Video URL</div>
+
+      <div style="margin-bottom:12px;">
+        <div class="option-label" style="margin-bottom:6px;">เลือกรูปแบบ / Select Format</div>
+        <div class="format-tabs">
+          <button class="format-tab active-mp4" id="tab-mp4" onclick="selectFormat('mp4')">🎬 MP4 (Video)</button>
+          <button class="format-tab" id="tab-mp3" onclick="selectFormat('mp3')">🎵 MP3 (Audio)</button>
+        </div>
+      </div>
+
+      <div class="url-row">
+        <input type="url" class="url-input" id="urlInput"
+          placeholder="https://www.youtube.com/watch?v=... หรือลิงก์วิดีโออื่น ๆ"
+          autocomplete="off" spellcheck="false" />
+        <button class="btn btn-primary" id="downloadBtn" onclick="startDownload()">
+          <span id="btnIcon">⬇</span>
+          <span id="btnText">โหลด</span>
+        </button>
+      </div>
+
+      <div class="options-row">
+        <div class="option-group" id="qualityGroup">
+          <div class="option-label">คุณภาพวิดีโอ</div>
+          <select class="select-styled" id="qualitySelect">
+            <option value="max">สูงสุด (Best)</option>
+            <option value="2160">4K – 2160p</option>
+            <option value="1440">QHD – 1440p</option>
+            <option value="1080">Full HD – 1080p</option>
+            <option value="720" selected>HD – 720p</option>
+            <option value="480">SD – 480p</option>
+            <option value="360">Low – 360p</option>
+          </select>
+        </div>
+        <div class="option-group" id="audioGroup" style="display:none;">
+          <div class="option-label">คุณภาพเสียง</div>
+          <select class="select-styled" id="audioSelect">
+            <option value="320">320 kbps (สูงสุด)</option>
+            <option value="256">256 kbps</option>
+            <option value="192">192 kbps</option>
+            <option value="128" selected>128 kbps</option>
+            <option value="96">96 kbps</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <div class="option-label">Service</div>
+          <select class="select-styled" id="apiSelect">
+            <option value="cobalt">cobalt.tools (แนะนำ)</option>
+            <option value="y2mate">y2mate (เปิดแท็บใหม่)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text">
+          <span id="progressLabel">กำลังประมวลผล…</span>
+          <span id="progressPct">0%</span>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="status-msg" id="statusMsg"></div>
     </div>
 
-    <div class="nav-actions">
-        <button class="nav-btn" onclick="resetProgress()">↻ รีเซ็ตการเรียน</button>
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <!-- Result Card -->
+    <div class="result-card" id="resultCard">
+      <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">
+        📋 ผลลัพธ์ / Result
+      </div>
+      <div class="result-thumb-row">
+        <div class="result-thumb-placeholder" id="thumbPlaceholder">🎬</div>
+        <img class="result-thumb" id="resultThumb" style="display:none;" alt="thumbnail" />
+        <div class="result-meta">
+          <div class="result-title" id="resultTitle">–</div>
+          <div class="result-info">
+            <span id="resultFormat">–</span>
+            <span id="resultQuality">–</span>
+          </div>
+          <div class="result-actions" id="resultActions"></div>
+        </div>
+      </div>
     </div>
 
-</nav>
+    <!-- Divider -->
+    <div class="divider-label">🔧 เครื่องมือเพิ่มเติม</div>
 
-<div class="app">
+    <!-- File Extension Changer -->
+    <div class="rename-card">
+      <div class="rename-card-header">
+        <div class="rename-icon">📝</div>
+        <div>
+          <div class="rename-title">เปลี่ยนนามสกุลไฟล์</div>
+          <div class="rename-subtitle">Rename &amp; Change File Extension · 100% Offline</div>
+        </div>
+      </div>
 
-    <aside class="sidebar" id="sidebar">
+      <div class="rename-upload-zone" id="dropZone">
+        <input type="file" id="fileInput" onchange="handleFileSelect()" />
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">คลิกหรือลากไฟล์มาวางที่นี่</div>
+        <div class="upload-subtext">Click or drag &amp; drop a file here</div>
+      </div>
 
-        <div class="sidebar-title">📚 บทเรียนทั้งหมด</div>
+      <div class="file-info-row" id="fileInfoRow">
+        <div class="file-icon-big" id="fileIconBig">📄</div>
+        <div class="file-details">
+          <div class="file-name-text" id="fileNameText">–</div>
+          <div class="file-size-text" id="fileSizeText">–</div>
+        </div>
+      </div>
 
-        <div id="lessonList"></div>
+      <div class="rename-fields">
+        <div class="field-wrap">
+          <div class="field-label">ชื่อไฟล์ใหม่</div>
+          <input type="text" class="text-input" id="newName" placeholder="ชื่อไฟล์ใหม่" />
+        </div>
+        <div class="arrow-box">→</div>
+        <div class="field-wrap">
+          <div class="field-label">นามสกุลใหม่</div>
+          <select class="select-styled" id="newExt">
+            <optgroup label="🎬 วิดีโอ / Video">
+              <option value="mp4">mp4</option>
+              <option value="mkv">mkv</option>
+              <option value="avi">avi</option>
+              <option value="mov">mov</option>
+              <option value="webm">webm</option>
+              <option value="flv">flv</option>
+              <option value="wmv">wmv</option>
+              <option value="m4v">m4v</option>
+              <option value="3gp">3gp</option>
+            </optgroup>
+            <optgroup label="🎵 เสียง / Audio">
+              <option value="mp3">mp3</option>
+              <option value="m4a">m4a</option>
+              <option value="wav">wav</option>
+              <option value="aac">aac</option>
+              <option value="ogg">ogg</option>
+              <option value="flac">flac</option>
+              <option value="wma">wma</option>
+            </optgroup>
+            <optgroup label="📄 อื่น ๆ / Other">
+              <option value="txt">txt</option>
+              <option value="pdf">pdf</option>
+              <option value="zip">zip</option>
+              <option value="json">json</option>
+              <option value="csv">csv</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
 
-    </aside>
+      <div style="margin-top:10px;">
+        <div class="field-label" style="margin-bottom:4px;">หรือพิมพ์นามสกุลเอง / Custom extension</div>
+        <input type="text" class="text-input" id="customExt" placeholder="เช่น ts, vob, rm, srt …" style="max-width:200px;" />
+      </div>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+      <div class="rename-actions">
+        <button class="btn btn-cyan" onclick="renameFile()">📝 บันทึกไฟล์ใหม่</button>
+        <button class="btn btn-secondary" onclick="clearRename()">✕ ล้าง</button>
+      </div>
+      <div class="status-msg" id="renameStatus" style="margin-top:10px;"></div>
+    </div>
 
-    <main class="content">
+    <div class="tip-box">
+      <strong>⚠️ หมายเหตุ:</strong>
+      การโหลดวิดีโอขึ้นอยู่กับนโยบายของแต่ละแพลตฟอร์ม หากโหลดไม่ได้ให้ลองเปลี่ยน Service<br/>
+      ฟีเจอร์เปลี่ยนนามสกุลไฟล์ใช้งานได้ <strong>100% Offline</strong> ไม่ต้องอัปโหลดไฟล์ไปไหนเลย
+    </div>
 
-        <section class="hero">
+  </div><!-- end center -->
 
-            <div class="badge">🎮 Lua Programming สำหรับมือใหม่</div>
-
-            <h1>เรียน Lua<br><span>แบบง่ายๆ</span></h1>
-
-            <p>
-                คอร์ส Lua ที่ออกแบบให้มือใหม่เข้าใจได้ง่าย
-                เรียนทีละขั้น พร้อมตัวอย่างและแบบฝึกหัด
-                เหมาะสำหรับเด็ก ป.6 และคนที่ไม่เคยเขียนโค้ดมาก่อน
-            </p>
-
-            <div class="progress-box">
-
-                <div class="progress-top">
-                    <span>ความคืบหน้าของคุณ</span>
-                    <span id="progressText">0%</span>
-                </div>
-
-                <div class="progress">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-
-            </div>
-
-        </section>
-
-        <section class="lesson-card" id="lessonContent"></section>
-
-    </main>
+  <!-- RIGHT PANEL -->
+  <div class="panel right-panel">
+    <div class="panel-header">📊 สถิติ / Stats</div>
+    <div class="panel-body">
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">โหลดแล้ว</div></div>
+        <div class="stat-box"><div class="stat-num" id="statRenamed">0</div><div class="stat-lbl">เปลี่ยนชื่อ</div></div>
+        <div class="stat-box"><div class="stat-num" id="statMp4">0</div><div class="stat-lbl">MP4</div></div>
+        <div class="stat-box"><div class="stat-num" id="statMp3">0</div><div class="stat-lbl">MP3</div></div>
+      </div>
+      <hr class="sep" />
+      <div style="font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+        <span style="width:3px;height:12px;background:var(--accent2);border-radius:99px;display:inline-block;"></span>
+        📜 ประวัติ / History
+      </div>
+      <div class="history-list" id="historyList">
+        <div style="font-size:11px;color:var(--text-dim);text-align:center;padding:16px 0;">ยังไม่มีประวัติ</div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
+<!-- ── Status Bar ── -->
+<div class="status-bar">
+  <div class="status-bar-dot"></div>
+  <span id="statusBarText">พร้อมใช้งาน · Ready</span>
+  <span>RUNIN Free For You v1.0</span>
+</div>
+
+<!-- ───────────────── MAIN SCRIPT ───────────────── -->
 <script>
+let currentFormat = 'mp4';
+let selectedFile  = null;
+let stats = { total:0, mp4:0, mp3:0, renamed:0 };
+let downloadHistory = [];
 
-const lessons = [
+/* Clock */
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('th-TH', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-{
-title:"รู้จัก Lua",
-icon:"👋",
-desc:`
-Lua คือภาษาโปรแกรมที่มีขนาดเล็กและเรียนรู้ได้ไม่ยาก
-เราสามารถใช้ Lua เพื่อสร้างระบบต่าง ๆ ในเกมได้
-
-ถ้าเปรียบเทียบง่าย ๆ
-
-<b>ภาษาโปรแกรม = ภาษาที่เราใช้คุยกับคอมพิวเตอร์</b>
-
-เราบอกคอมพิวเตอร์ว่า "ทำสิ่งนี้"
-แล้วคอมพิวเตอร์ก็ทำตามคำสั่งของเรา
-`,
-code:`print("สวัสดี Lua!")
-print("ฉันกำลังเรียนเขียนโปรแกรม")`,
-tip:"คำสั่ง print() ใช้สำหรับแสดงข้อความออกมา",
-question:"ลองเขียนคำสั่งที่แสดงคำว่า Hello Lua!",
-answer:'print("Hello Lua!")'
-},
-
-{
-title:"ตัวแปร (Variable)",
-icon:"📦",
-desc:`
-ตัวแปรเปรียบเหมือน "กล่องเก็บของ"
-
-เราใช้ตัวแปรเก็บข้อมูล เช่น ชื่อ อายุ คะแนน หรือเงิน
-
-คำว่า <b>local</b> หมายถึงเรากำลังสร้างตัวแปรขึ้นมา
-`,
-code:`local name = "Joe"
-local age = 16
-
-print(name)
-print(age)`,
-tip:"ตัวแปรช่วยให้เราเก็บข้อมูลและนำข้อมูลนั้นมาใช้ภายหลังได้",
-question:"สร้างตัวแปรชื่อ score และให้มีค่า 100",
-answer:'local score = 100'
-},
-
-{
-title:"ตัวเลขและการคำนวณ",
-icon:"🔢",
-desc:`
-Lua สามารถคำนวณตัวเลขได้เหมือนเครื่องคิดเลข
-
-+ คือ บวก<br>
-- คือ ลบ<br>
-* คือ คูณ<br>
-/ คือ หาร
-`,
-code:`local money = 100
-local price = 25
-
-local result = money - price
-
-print(result)`,
-tip:"ถ้าเงินมี 100 บาท แล้วซื้อของ 25 บาท จะเหลือ 75 บาท",
-question:"สร้างตัวแปร a = 10 และ b = 5 แล้วหาผลบวก",
-answer:'local a = 10\nlocal b = 5\nprint(a + b)'
-},
-
-{
-title:"if / else",
-icon:"🧠",
-desc:`
-บางครั้งเราต้องการให้โปรแกรม "ตัดสินใจ"
-
-ตัวอย่างเช่น
-
-ถ้าคะแนนมากกว่าหรือเท่ากับ 50 → ผ่าน
-
-ถ้าน้อยกว่า 50 → ไม่ผ่าน
-
-เราสามารถใช้ <b>if</b> และ <b>else</b>
-`,
-code:`local score = 80
-
-if score >= 50 then
-    print("ผ่าน!")
-else
-    print("ไม่ผ่าน")
-end`,
-tip:"if = ถ้า และ else = ถ้าไม่ใช่",
-question:"เขียน if ที่ตรวจว่า score มากกว่าหรือเท่ากับ 10",
-answer:'if score >= 10 then'
-},
-
-{
-title:"Loop",
-icon:"🔁",
-desc:`
-Loop คือการสั่งให้โปรแกรมทำอะไรซ้ำ ๆ
-
-เช่น เราต้องการแสดงคำว่า "Hello"
-5 ครั้ง
-
-แทนที่จะเขียน print() 5 ครั้ง
-เราสามารถใช้ loop ได้
-`,
-code:`for i = 1, 5 do
-    print("Hello")
-end`,
-tip:"for loop ช่วยลดการเขียนโค้ดซ้ำ ๆ",
-question:"สร้าง for loop ที่ทำงาน 3 รอบ",
-answer:'for i = 1, 3 do'
-},
-
-{
-title:"Function",
-icon:"⚙️",
-desc:`
-Function คือการสร้าง "คำสั่งของเราเอง"
-
-สมมติว่าเราต้องการให้โปรแกรมพูดคำว่า Hello
-เราสามารถสร้างฟังก์ชันชื่อ SayHello ได้
-`,
-code:`local function SayHello()
-    print("สวัสดี!")
-end
-
-SayHello()`,
-tip:"เมื่อสร้าง Function แล้ว เราสามารถเรียกใช้มันกี่ครั้งก็ได้",
-question:"สร้าง Function ชื่อ Test",
-answer:'local function Test()'
-},
-
-{
-title:"Table",
-icon:"📋",
-desc:`
-Table ใช้สำหรับเก็บข้อมูลหลายอย่างเอาไว้ด้วยกัน
-
-เช่น รายชื่อผลไม้ 3 อย่าง
-
-ข้อมูลตัวแรกจะอยู่ที่ตำแหน่ง 1
-ข้อมูลตัวที่สองอยู่ที่ตำแหน่ง 2
-`,
-code:`local fruits = {
-    "Apple",
-    "Banana",
-    "Orange"
+/* Format */
+function selectFormat(fmt) {
+  currentFormat = fmt;
+  document.getElementById('tab-mp4').className = 'format-tab' + (fmt==='mp4' ? ' active-mp4' : '');
+  document.getElementById('tab-mp3').className = 'format-tab' + (fmt==='mp3' ? ' active-mp3' : '');
+  document.getElementById('qualityGroup').style.display = fmt==='mp4' ? '' : 'none';
+  document.getElementById('audioGroup').style.display   = fmt==='mp3' ? '' : 'none';
 }
 
-print(fruits[1])`,
-tip:"Lua เริ่มนับตำแหน่งใน Array จาก 1",
-question:"สร้าง table ชื่อ pets ที่มี Dog และ Cat",
-answer:'local pets = {\n    "Dog",\n    "Cat"\n}'
-},
-
-{
-title:"String",
-icon:"🔤",
-desc:`
-String คือข้อมูลประเภทข้อความ
-
-ข้อความต้องอยู่ภายในเครื่องหมาย " "
-
-เรายังสามารถนำข้อความมาต่อกันได้ด้วย ..
-`,
-code:`local name = "Joe"
-
-print("สวัสดี " .. name)`,
-tip:"เครื่องหมาย .. ใช้สำหรับต่อข้อความเข้าด้วยกัน",
-question:"สร้างตัวแปร name ที่มีค่าเป็น Alex",
-answer:'local name = "Alex"'
-},
-
-{
-title:"Boolean",
-icon:"✅",
-desc:`
-Boolean มีอยู่ 2 ค่า
-
-<b>true</b> = จริง
-
-<b>false</b> = เท็จ
-
-มักใช้ร่วมกับ if
-`,
-code:`local isAdmin = true
-
-if isAdmin then
-    print("คุณเป็น Admin")
-end`,
-tip:"Boolean เหมาะกับการเก็บข้อมูลแบบใช่/ไม่ใช่",
-question:"สร้างตัวแปรชื่อ isPlayer และให้เป็น true",
-answer:'local isPlayer = true'
-},
-
-{
-title:"Roblox Lua",
-icon:"🎮",
-desc:`
-ตอนนี้เราจะเริ่มเข้าสู่ Roblox Lua
-
-Roblox ใช้ภาษา <b>Luau</b>
-ซึ่งพัฒนามาจาก Lua
-
-เราสามารถใช้ Script เพื่อควบคุมสิ่งต่าง ๆ
-ภายในเกมของเราได้
-`,
-code:`print("Hello Roblox!")
-
-local part = workspace.Part
-
-part.Transparency = 0.5`,
-tip:"workspace คือพื้นที่หลักที่เก็บสิ่งต่าง ๆ ในเกม",
-question:"เขียนคำสั่ง print เพื่อแสดงคำว่า Roblox",
-answer:'print("Roblox")'
-},
-
-{
-title:"Part",
-icon:"🧱",
-desc:`
-Part คือวัตถุพื้นฐานใน Roblox
-
-เราสามารถเปลี่ยนคุณสมบัติของ Part ได้ เช่น
-
-Transparency = ความโปร่งใส
-
-CanCollide = เดินชนได้หรือไม่
-`,
-code:`local part = workspace.Part
-
-part.Transparency = 0.5
-part.CanCollide = false`,
-tip:"ลองเปลี่ยนค่า Transparency เป็น 1 แล้วดูว่าเกิดอะไรขึ้น",
-question:"ตั้งค่า CanCollide ของ Part ให้เป็น false",
-answer:'part.CanCollide = false'
-},
-
-{
-title:"Event",
-icon:"⚡",
-desc:`
-Event คือเหตุการณ์
-
-เช่น ผู้เล่นแตะ Part
-
-เราสามารถบอก Script ว่า
-
-"ถ้ามีคนแตะ Part ให้ทำสิ่งนี้"
-`,
-code:`workspace.Part.Touched:Connect(function(hit)
-    print("มีคนแตะ Part!")
-end)`,
-tip:"Touched จะทำงานเมื่อมีบางสิ่งสัมผัสกับ Part",
-question:"เมื่อ Part ถูกแตะ ให้แสดงคำว่า Hit!",
-answer:'print("Hit!")'
-},
-
-{
-title:"Player",
-icon:"👤",
-desc:`
-ใน Roblox เราสามารถเข้าถึงข้อมูลของผู้เล่นได้
-
-ตัวอย่างเช่นชื่อของผู้เล่น
-`,
-code:`local Players = game:GetService("Players")
-
-local player = Players.LocalPlayer
-
-print(player.Name)`,
-tip:"LocalPlayer หมายถึงผู้เล่นที่กำลังเล่นอยู่บนเครื่องนั้น",
-question:"แสดงชื่อผู้เล่นด้วย print",
-answer:'print(player.Name)'
-},
-
-{
-title:"Coin System",
-icon:"💰",
-desc:`
-มาลองทำระบบ Coin ง่าย ๆ
-
-เราจะสร้างตัวแปร coins
-แล้วเพิ่มจำนวน Coin เข้าไป
-`,
-code:`local coins = 0
-
-coins = coins + 10
-coins = coins + 5
-
-print("Coins:", coins)`,
-tip:"coins = coins + 10 หมายถึงเพิ่ม Coin อีก 10",
-question:"สร้าง coins = 0 แล้วเพิ่มอีก 100",
-answer:'local coins = 0\ncoins = coins + 100'
-},
-
-{
-title:"Mini Project",
-icon:"🏆",
-desc:`
-ยินดีด้วย! 🎉
-
-มาถึงโปรเจกต์เล็ก ๆ ของเราแล้ว
-
-ลองนำความรู้ทั้งหมดมารวมกัน
-
-โปรเจกต์นี้จะมี
-
-• Coin
-• คะแนน
-• Function
-• if
-• print
-
-การเขียนโปรแกรมเก่งขึ้นไม่ได้เกิดจากการจำ
-แต่เกิดจากการ "ลองเขียน" บ่อย ๆ
-`,
-code:`local coins = 0
-
-local function AddCoin()
-    coins = coins + 10
-    print("Coin:", coins)
-end
-
-AddCoin()
-AddCoin()
-
-if coins >= 20 then
-    print("เก่งมาก! ได้ 20 Coin แล้ว")
-end`,
-tip:"อย่ากลัวโค้ดผิด เพราะ Error คือสิ่งที่ช่วยให้เราเรียนรู้",
-question:"ลองสร้างตัวแปร score = 100",
-answer:'local score = 100'
+/* Status */
+function showStatus(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = `status-msg ${type} show`;
+  const icons = { info:'ℹ️', success:'✅', error:'❌', warning:'⚠️' };
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
 }
+function hideStatus(id) { document.getElementById(id).className = 'status-msg'; }
 
-];
-
-let currentLesson = 0;
-let completed = JSON.parse(localStorage.getItem("luaCompleted") || "[]");
-
-function init(){
-
-    createLessonList();
-    showLesson(0);
-    updateProgress();
-
+/* Progress */
+function showProgress(label, pct) {
+  document.getElementById('progressWrap').classList.add('show');
+  document.getElementById('progressLabel').textContent = label;
+  document.getElementById('progressPct').textContent   = pct + '%';
+  document.getElementById('progressFill').style.width  = pct + '%';
 }
-
-function createLessonList(){
-
-    const list = document.getElementById("lessonList");
-
-    list.innerHTML = "";
-
-    lessons.forEach((lesson,index)=>{
-
-        const btn = document.createElement("button");
-
-        btn.className =
-            "lesson-item " +
-            (index === currentLesson ? "active " : "") +
-            (completed.includes(index) ? "done" : "");
-
-        btn.innerHTML = `
-            <span class="lesson-number">
-                ${completed.includes(index) ? "✓" : index + 1}
-            </span>
-            <span>${lesson.title}</span>
-        `;
-
-        btn.onclick = ()=>{
-
-            showLesson(index);
-
-            if(window.innerWidth <= 800){
-                toggleMenu();
-            }
-
-        };
-
-        list.appendChild(btn);
-
-    });
-
-}
-
-function showLesson(index){
-
-    currentLesson = index;
-
-    const lesson = lessons[index];
-
-    const content = document.getElementById("lessonContent");
-
-    content.innerHTML = `
-
-        <div class="lesson-head">
-
-            <div class="lesson-icon">
-                ${lesson.icon}
-            </div>
-
-            <div>
-                <small>บทที่ ${index + 1} / ${lessons.length}</small>
-                <h2>${lesson.title}</h2>
-            </div>
-
-        </div>
-
-        <div class="explain">
-            ${lesson.desc}
-        </div>
-
-        <div class="code-title">
-            <span>💻 ตัวอย่างโค้ด</span>
-            <button class="copy-btn" onclick="copyCode()">คัดลอก</button>
-        </div>
-
-        <div class="code-box">
-
-            <pre id="code">${escapeHtml(lesson.code)}</pre>
-
-            <button class="run-btn" onclick="runCode()">
-                ▶ ทดลองรัน
-            </button>
-
-        </div>
-
-        <div class="tip">
-            <span>💡</span>
-            <div>
-                <strong>จำง่าย ๆ:</strong><br>
-                ${lesson.tip}
-            </div>
-        </div>
-
-        <div class="exercise">
-
-            <h3>📝 แบบฝึกหัด</h3>
-
-            <div class="question">
-                ${lesson.question}
-            </div>
-
-            <textarea
-                class="answer-area"
-                id="answer"
-                placeholder="พิมพ์โค้ดของคุณตรงนี้..."
-            ></textarea>
-
-            <br>
-
-            <button class="check-btn" onclick="checkAnswer()">
-                ✓ ตรวจคำตอบ
-            </button>
-
-            <div class="result" id="result"></div>
-
-        </div>
-
-        <div class="lesson-footer">
-
-            <button
-                class="footer-btn"
-                onclick="previousLesson()"
-                ${index === 0 ? "disabled" : ""}
-            >
-                ← บทก่อนหน้า
-            </button>
-
-            <button
-                class="footer-btn primary"
-                onclick="completeLesson()"
-            >
-                ${completed.includes(index) ? "✓ เรียนจบแล้ว" : "เรียนจบบทนี้ ✓"}
-            </button>
-
-            <button
-                class="footer-btn"
-                onclick="nextLesson()"
-                ${index === lessons.length - 1 ? "disabled" : ""}
-            >
-                บทถัดไป →
-            </button>
-
-        </div>
-
-    `;
-
-    createLessonList();
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
-}
-
-function escapeHtml(text){
-
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
-}
-
-function copyCode(){
-
-    navigator.clipboard.writeText(
-        lessons[currentLesson].code
-    );
-
-    const btn = document.querySelector(".copy-btn");
-
-    btn.textContent = "✓ คัดลอกแล้ว";
-
-    setTimeout(()=>{
-        btn.textContent = "คัดลอก";
-    },1500);
-
-}
-
-function runCode(){
-
-    alert(
-        "▶ ทดลองรัน\n\n" +
-        "โค้ดถูกส่งให้ตัวจำลองทำงานแล้ว!\n\n" +
-        "หมายเหตุ: เว็บไซต์นี้เป็นตัวจำลองสำหรับฝึกเขียนโค้ด " +
-        "ไม่ได้รัน Luau ของ Roblox จริง"
-    );
-
-}
-
-function checkAnswer(){
-
-    const input = document
-        .getElementById("answer")
-        .value
-        .trim()
-        .replace(/\s+/g," ");
-
-    const correct = lessons[currentLesson]
-        .answer
-        .trim()
-        .replace(/\s+/g," ");
-
-    const result = document.getElementById("result");
-
-    if(input === correct){
-
-        result.className = "result success";
-
-        result.innerHTML =
-            "🎉 ถูกต้อง! เก่งมาก! ไปบทต่อไปได้เลย";
-
-    }else{
-
-        result.className = "result error";
-
-        result.innerHTML =
-            "❌ ยังไม่ถูก ลองดูตัวอย่างด้านบนแล้วลองใหม่อีกครั้ง";
-
+function hideProgress() { document.getElementById('progressWrap').classList.remove('show'); }
+
+/* Status Bar */
+function setStatusBar(msg) { document.getElementById('statusBarText').textContent = msg; }
+
+/* Download */
+async function startDownload() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url)              { showStatus('statusMsg','warning','กรุณาวางลิงก์วิดีโอก่อน'); return; }
+  if (!isValidUrl(url))  { showStatus('statusMsg','error','ลิงก์ไม่ถูกต้อง กรุณาตรวจสอบ URL'); return; }
+
+  const btn = document.getElementById('downloadBtn');
+  btn.disabled = true;
+  document.getElementById('btnIcon').className = 'spin';
+  document.getElementById('btnIcon').textContent = '⏳';
+  document.getElementById('btnText').textContent = 'กำลังโหลด…';
+  document.getElementById('resultCard').classList.remove('show');
+  hideStatus('statusMsg');
+
+  const api     = document.getElementById('apiSelect').value;
+  const quality = document.getElementById('qualitySelect').value;
+
+  showProgress('กำลังเชื่อมต่อ…', 10);
+  setStatusBar('🔄 กำลังดาวน์โหลด…');
+
+  try {
+    if (api === 'cobalt') {
+      await downloadViaCobalt(url, quality);
+    } else {
+      await downloadViaY2mate(url);
     }
+  } catch(e) {
+    hideProgress();
+    showStatus('statusMsg','error','เกิดข้อผิดพลาด: ' + e.message + '<br/><small>ลองเปลี่ยน Service หรือลองใหม่อีกครั้ง</small>');
+    setStatusBar('❌ ดาวน์โหลดล้มเหลว');
+  }
 
+  btn.disabled = false;
+  document.getElementById('btnIcon').className = '';
+  document.getElementById('btnIcon').textContent = '⬇';
+  document.getElementById('btnText').textContent = 'โหลด';
 }
 
-function completeLesson(){
-
-    if(!completed.includes(currentLesson)){
-
-        completed.push(currentLesson);
-
-        localStorage.setItem(
-            "luaCompleted",
-            JSON.stringify(completed)
-        );
-
-    }
-
-    updateProgress();
-    createLessonList();
-
-    if(currentLesson < lessons.length - 1){
-
-        showLesson(currentLesson + 1);
-
-    }else{
-
-        alert("🎉 ยินดีด้วย! คุณเรียนจบคอร์ส Attack Hub แล้ว!");
-
-    }
-
+function isValidUrl(str) {
+  try { return Boolean(new URL(str)); } catch(_) { return false; }
 }
 
-function previousLesson(){
+async function downloadViaCobalt(url, quality) {
+  showProgress('กำลังส่งคำขอไปยัง cobalt.tools…', 25);
 
-    if(currentLesson > 0){
+  const res = await fetch('https://api.cobalt.tools/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      url,
+      videoQuality:  quality === 'max' ? 'max' : quality,
+      audioFormat:   currentFormat === 'mp3' ? 'mp3' : 'best',
+      downloadMode:  currentFormat === 'mp3' ? 'audio' : 'auto',
+      filenameStyle: 'basic',
+    }),
+  });
 
-        showLesson(currentLesson - 1);
+  showProgress('กำลังประมวลผล…', 55);
 
-    }
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try { const j = await res.json(); msg = j.error?.message || msg; } catch(_) {}
+    throw new Error(msg);
+  }
 
+  const data = await res.json();
+  showProgress('รับข้อมูลสำเร็จ…', 80);
+
+  if (data.status === 'error') throw new Error(data.error?.message || 'cobalt API error');
+
+  const dlUrl = data.url || (data.picker && data.picker[0]?.url);
+  const fname = data.filename || guessFname(url);
+
+  if (!dlUrl) throw new Error('ไม่พบลิงก์ดาวน์โหลด — ลองเปลี่ยน Service');
+
+  showProgress('เตรียมดาวน์โหลด…', 95);
+  triggerDownload(dlUrl, fname);
+
+  showProgress('เสร็จสิ้น! 🎉', 100);
+  showStatus('statusMsg', 'success', 'ดาวน์โหลดสำเร็จ! 🎉');
+  setStatusBar('✅ ดาวน์โหลดสำเร็จ');
+
+  showResult({ title: fname, format: currentFormat.toUpperCase(), quality: quality !== 'max' ? quality + 'p' : 'Best', thumb: data.thumbnail, dlUrl, fname });
+  updateStats(currentFormat);
+  addHistory(fname, currentFormat);
+  setTimeout(hideProgress, 1500);
 }
 
-function nextLesson(){
-
-    if(currentLesson < lessons.length - 1){
-
-        showLesson(currentLesson + 1);
-
-    }
-
+async function downloadViaY2mate(url) {
+  showProgress('เปิดบริการภายนอก…', 60);
+  setTimeout(() => {
+    window.open(`https://www.y2mate.com/youtube/${encodeURIComponent(url)}`, '_blank');
+    showProgress('เปิดแท็บใหม่แล้ว…', 100);
+    showStatus('statusMsg', 'info', 'เปิด y2mate ในแท็บใหม่แล้ว 🌐 กรุณาดาวน์โหลดจากหน้านั้น');
+    setStatusBar('🌐 เปิด y2mate แล้ว');
+    setTimeout(hideProgress, 1000);
+  }, 500);
 }
 
-function updateProgress(){
-
-    const percent =
-        Math.round(
-            (completed.length / lessons.length) * 100
-        );
-
-    document.getElementById("progressBar").style.width =
-        percent + "%";
-
-    document.getElementById("progressText").textContent =
-        percent + "%";
-
+function guessFname(url) {
+  try {
+    const u = new URL(url);
+    const v = u.searchParams.get('v');
+    if (v) return `video_${v}.${currentFormat}`;
+    const parts = u.pathname.split('/').filter(Boolean);
+    return (parts[parts.length - 1] || 'video') + '.' + currentFormat;
+  } catch(_) { return `download.${currentFormat}`; }
 }
 
-function resetProgress(){
-
-    if(confirm("ต้องการรีเซ็ตความคืบหน้าทั้งหมดหรือไม่?")){
-
-        completed = [];
-
-        localStorage.removeItem("luaCompleted");
-
-        updateProgress();
-        createLessonList();
-        showLesson(0);
-
-    }
-
+function triggerDownload(href, filename) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => a.remove(), 1000);
 }
 
-function toggleMenu(){
+function showResult({ title, format, quality, thumb, dlUrl, fname }) {
+  document.getElementById('resultTitle').textContent   = title;
+  document.getElementById('resultFormat').textContent  = format;
+  document.getElementById('resultQuality').textContent = quality;
 
-    document
-        .getElementById("sidebar")
-        .classList.toggle("open");
+  if (thumb) {
+    const img = document.getElementById('resultThumb');
+    img.src = thumb;
+    img.style.display = '';
+    document.getElementById('thumbPlaceholder').style.display = 'none';
+  } else {
+    document.getElementById('resultThumb').style.display = 'none';
+    document.getElementById('thumbPlaceholder').style.display = '';
+    document.getElementById('thumbPlaceholder').textContent = format === 'MP3' ? '🎵' : '🎬';
+  }
 
-    document
-        .getElementById("overlay")
-        .classList.toggle("show");
+  const actions = document.getElementById('resultActions');
+  actions.innerHTML = '';
+  const dlBtn = document.createElement('button');
+  dlBtn.className = 'btn btn-success';
+  dlBtn.innerHTML = '⬇ ดาวน์โหลดอีกครั้ง';
+  dlBtn.onclick = () => triggerDownload(dlUrl, fname);
+  actions.appendChild(dlBtn);
 
+  document.getElementById('resultCard').classList.add('show');
 }
 
-init();
+/* Stats & History */
+function updateStats(fmt) {
+  stats.total++;
+  if (fmt === 'mp4') stats.mp4++; else stats.mp3++;
+  document.getElementById('statTotal').textContent = stats.total;
+  document.getElementById('statMp4').textContent   = stats.mp4;
+  document.getElementById('statMp3').textContent   = stats.mp3;
+}
 
+function addHistory(name, fmt) {
+  downloadHistory.unshift({ name, fmt, time: new Date().toLocaleTimeString('th-TH') });
+  if (downloadHistory.length > 10) downloadHistory.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!downloadHistory.length) {
+    list.innerHTML = '<div style="font-size:11px;color:var(--text-dim);text-align:center;padding:16px 0;">ยังไม่มีประวัติ</div>';
+    return;
+  }
+  list.innerHTML = downloadHistory.map(h => `
+    <div class="history-item">
+      <div class="history-item-title">${esc(h.name)}</div>
+      <div class="history-item-meta">
+        <span class="hist-badge ${h.fmt}">${h.fmt.toUpperCase()}</span>${h.time}
+      </div>
+    </div>`).join('');
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* File Extension Changer */
+const FILE_ICONS = {
+  mp4:'🎬',mkv:'🎬',avi:'🎬',mov:'🎬',webm:'🎬',flv:'🎬',wmv:'🎬',m4v:'🎬','3gp':'🎬',
+  mp3:'🎵',m4a:'🎵',wav:'🎵',aac:'🎵',ogg:'🎵',flac:'🎵',wma:'🎵',
+  pdf:'📕',txt:'📄',zip:'🗜️',json:'📋',csv:'📊',
+};
+
+function handleFileSelect() {
+  const input = document.getElementById('fileInput');
+  if (!input.files.length) return;
+  selectedFile = input.files[0];
+
+  const nameNoExt = selectedFile.name.replace(/\.[^.]+$/, '');
+  const ext       = selectedFile.name.split('.').pop().toLowerCase();
+
+  document.getElementById('newName').value = nameNoExt;
+  document.getElementById('customExt').value = '';
+
+  const sel = document.getElementById('newExt');
+  let matched = false;
+  for (const opt of sel.options) {
+    if (opt.value === ext) { sel.value = ext; matched = true; break; }
+  }
+  if (!matched) document.getElementById('customExt').value = ext;
+
+  document.getElementById('fileIconBig').textContent = FILE_ICONS[ext] || '📄';
+  document.getElementById('fileNameText').textContent = selectedFile.name;
+  document.getElementById('fileSizeText').textContent = formatBytes(selectedFile.size);
+  document.getElementById('fileInfoRow').classList.add('show');
+  hideStatus('renameStatus');
+}
+
+function renameFile() {
+  if (!selectedFile) { showStatus('renameStatus','warning','กรุณาเลือกไฟล์ก่อน'); return; }
+
+  const newName   = document.getElementById('newName').value.trim();
+  const customExt = document.getElementById('customExt').value.trim().replace(/^\./, '');
+  const selExt    = document.getElementById('newExt').value;
+  const finalExt  = customExt || selExt;
+
+  if (!newName)   { showStatus('renameStatus','warning','กรุณาระบุชื่อไฟล์'); return; }
+  if (!finalExt)  { showStatus('renameStatus','warning','กรุณาระบุนามสกุลไฟล์'); return; }
+
+  const finalName = `${newName}.${finalExt}`;
+  const url = URL.createObjectURL(selectedFile);
+  const a   = document.createElement('a');
+  a.href = url; a.download = finalName;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+
+  showStatus('renameStatus','success',`💾 บันทึกไฟล์ "${finalName}" สำเร็จ!`);
+  setStatusBar(`📝 เปลี่ยนชื่อเป็น ${finalName}`);
+  stats.renamed++;
+  document.getElementById('statRenamed').textContent = stats.renamed;
+}
+
+function clearRename() {
+  selectedFile = null;
+  document.getElementById('fileInput').value   = '';
+  document.getElementById('newName').value     = '';
+  document.getElementById('customExt').value   = '';
+  document.getElementById('fileInfoRow').classList.remove('show');
+  hideStatus('renameStatus');
+}
+
+/* Drag & Drop */
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) {
+    document.getElementById('fileInput').files = e.dataTransfer.files;
+    handleFileSelect();
+  }
+});
+
+/* Helpers */
+function formatBytes(b) {
+  if (b < 1024)       return b + ' B';
+  if (b < 1048576)    return (b/1024).toFixed(1) + ' KB';
+  if (b < 1073741824) return (b/1048576).toFixed(2) + ' MB';
+  return (b/1073741824).toFixed(2) + ' GB';
+}
 </script>
+
+<!-- ───── Anti-Inspect ───── -->
 <script>
-// ปิดคลิกขวา
 document.addEventListener("contextmenu", e => {
-    e.preventDefault();
-    alert("ฮั่นแน่ 👀 จะคลิกขวาทำไม");
+  e.preventDefault();
+  alert("ฮั่นแน่ 👀 จะคลิกขวาทำไม");
 });
 
-// ปิดปุ่มลัด DevTools
 document.addEventListener("keydown", e => {
-
-    if (e.key === "F12") {
-        e.preventDefault();
-        alert("ฮั่นแน่ 👀 จะดูโค้ดหรอ");
-    }
-
-    if (
-        e.ctrlKey &&
-        e.shiftKey &&
-        (
-            e.key === "I" ||
-            e.key === "J" ||
-            e.key === "C"
-        )
-    ) {
-        e.preventDefault();
-        alert("แหม่ 😏 จะเปิด DevTools ใช่มั้ย");
-    }
-
-    if (e.ctrlKey && e.key === "U") {
-        e.preventDefault();
-        alert("ดู Source ไม่ได้น้า 🤣");
-    }
+  if (e.key === "F12") {
+    e.preventDefault();
+    alert("ฮั่นแน่ 👀 จะดูโค้ดหรอ");
+  }
+  if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) {
+    e.preventDefault();
+    alert("แหม่ 😏 จะเปิด DevTools ใช่มั้ย");
+  }
+  if (e.ctrlKey && e.key === "U") {
+    e.preventDefault();
+    alert("ดู Source ไม่ได้น้า 🤣");
+  }
 });
 
-// ข้อความใน Console
-console.log(
-    "%cฮั่นแน่ 👀",
-    "font-size:50px;font-weight:bold;color:red;"
-);
+console.log("%cฮั่นแน่ 👀", "font-size:50px;font-weight:bold;color:red;");
+console.log("%cจะดูโค้ดก็ได้ แต่อย่าก๊อปเลยนะ 😆", "font-size:20px;");
 
-console.log(
-    "%cจะดูโค้ดก็ได้ แต่อย่าก๊อปเลยนะ 😆",
-    "font-size:20px;"
-);
-
-// ตรวจจับ DevTools
 let warned = false;
-
 setInterval(() => {
-
-    const devtools =
-        window.outerWidth - window.innerWidth > 160 ||
-        window.outerHeight - window.innerHeight > 160;
-
-    if (devtools && !warned) {
-
-        warned = true;
-
-        alert("🚨 ฮั่นแน่! เปิด F12 ทำไม 😏");
-
-        document.body.insertAdjacentHTML(
-            "beforeend",
-            `
-            <div id="runin-warning"
-            style="
-            position:fixed;
-            top:20px;
-            right:20px;
-            z-index:999999;
-            background:#111;
-            color:#00ff88;
-            padding:15px 25px;
-            border-radius:10px;
-            font-size:18px;
-            box-shadow:0 0 15px #00ff88;">
-            👀 ฮั่นแน่ จะส่องอะไรอะ
-            </div>
-            `
-        );
-
-    }
-
+  const dev = window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160;
+  if (dev && !warned) {
+    warned = true;
+    alert("🚨 ฮั่นแน่! เปิด F12 ทำไม 😏");
+    document.body.insertAdjacentHTML("beforeend",
+      `<div id="runin-warning" style="position:fixed;top:20px;right:20px;z-index:999999;
+        background:#111;color:#00ff88;padding:15px 25px;border-radius:10px;
+        font-size:18px;box-shadow:0 0 15px #00ff88;">
+        👀 ฮั่นแน่ จะส่องอะไรอะ</div>`);
+  }
 }, 1000);
 </script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'F12') e.preventDefault();
+  if (e.ctrlKey && e.shiftKey && (e.key==='I'||e.key==='J'||e.key==='C')) e.preventDefault();
+  if (e.ctrlKey && e.key === 'U') e.preventDefault();
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+</script>
+
 </body>
 </html>
